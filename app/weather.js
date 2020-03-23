@@ -327,6 +327,7 @@ class App extends React.Component {
 
     logout() {
         $.get('/logout')
+        window.location=window.location.origin;
     }
 
     deleteCity(index) {
@@ -378,7 +379,7 @@ class App extends React.Component {
                         <label htmlFor='kelvin'><input id='kelvin' type="radio" name='unit' value='K' checked={this.state.units==='K'} onChange={this.changeUnit} /> Kelvin</label>
                     </form>
                     <button className='sidenav-button' onClick={this.addCity}>Add Another City</button>
-                    <button onClick={this.logout}>Logout</button>
+                    <button className='sidenav-button' onClick={this.logout}>Logout</button>
                 </div>
                 <div className='container-fluid'>
                     {this.state.cities.map((city, index) => {
@@ -398,7 +399,5 @@ class App extends React.Component {
         )
     }
 }
-
-
 
 ReactDOM.render(<App />, document.getElementById('app'));

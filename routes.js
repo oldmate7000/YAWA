@@ -22,7 +22,7 @@ module.exports = function (app, db) {
     res.sendFile(__dirname + '/public/weather.html');
   })
 
-  app.get('/getweather', function (req, res) {
+  app.get('/getweather',ensureAuthenticated, function (req, res) {
     request('https://api.openweathermap.org/data/2.5/forecast?q=' + req.query.city + '&appid=' + process.env.OWAKEY, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         // console.log('response')
