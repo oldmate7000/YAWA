@@ -7,9 +7,16 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx', '.css'],
   },
-  plugins: [new HtmlWebpackPlugin({
-    template: "./app/weather.html"
-  })],
+  plugins: [
+    new HtmlWebpackPlugin({
+    template: "./app/weather.html",
+    filename: 'weather.html',
+  }),
+  new HtmlWebpackPlugin({
+    template: "./app/login.html",
+    inject: false,
+  })
+  ],
   module: {
     rules: [
       {
@@ -23,7 +30,9 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ['style-loader', 'css-loader']
+        loader: ['style-loader', 'css-loader'],
+        exclude: /node_modules/,
+        include: path.join(__dirname, 'app'),
       }
     ]
   },

@@ -1,7 +1,79 @@
-/* @import url("https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"); */
-@import "../node_modules/bootstrap/dist/css/bootstrap";
+@import "~bootstrap/dist/css/bootstrap.css";
 
-/* * {
-    margin: 10px;
-    padding: 10px;
-} */
+.card {
+    margin: 2.5vh;
+    padding: 20px;
+    height: 95vh;
+    justify-content: space-between;
+}
+
+.container-fluid {
+    width: auto;
+    margin-left: 200px;
+}
+
+.canvas-container {
+    height: 40vh
+}
+
+.sidenav {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    padding-left: 20px;
+    min-width: 200px;
+    border-right: solid;
+}
+
+.sidenav button {
+    width: 90%;
+}
+
+.sidenav-units {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-height: 620px) {
+    .week-table {
+        display: none;
+    }
+}
+
+@media (max-height: 720px) {
+    .table-sm td {
+        padding: 0px;
+    }
+
+    .table-sm th {
+        padding: 0px;
+    }
+}
+@media (max-height: 800px) {
+    .week-table {
+        font-size: 0.75em;
+    }
+}
+@media (max-width: 900px) {
+    .card {
+        font-size: 0.75em;
+    }
+
+    .card-title {
+        font-size: 2em;
+    }
+
+    .sidenav {
+        position: static;
+        border-right: hidden;
+        border-bottom: solid;
+    }
+
+    .sidenav-button {
+        align-self: center;
+    }
+
+    .container-fluid {
+        margin-left: 0;
+    }
+}

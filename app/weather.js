@@ -1,25 +1,21 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 // const $ = require('jquery')
+const shortid = require('shortid');
+const countryList = require('iso-3166-country-list');
 
 import $ from 'jquery'
 import {Line} from 'react-chartjs-2'
-import 'react-leaflet'
-// import 'bootstrap'
+import 'bootstrap'
 import './style.css';
 
-function getData(cityName) { //function purely to fetch the data from the server and pack it into 'weatherDataJson'
-    return $.getJSON
-    // (window.location.origin + "/getweather", '', (json) => {
-        ('https://api.openweathermap.org/data/2.5/forecast?q='+cityName+'&appid=2660e938622fb954aa1131b571b41e53', '', (json) => {
-            //lat=-33.9240479&lon=151.1880122
-            // console.log(json);
-            // console.log("API call successful")
-    })
+
+function getWeatherData(cityName) { //function purely to fetch the data from the server and pack it into 'weatherDataJson'
+    return $.getJSON(window.location.origin + "/getweather?city="+cityName)
 }
 
 
-function parseData(weatherDataJson, tempUnit) { //grabbing the bits of data we actually want from the api call.
+function parseWeatherData(weatherDataJson, tempUnit) { //grabbing the bits of data we actually want from the api call.
     let forecastProps = {}
     const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     weatherDataJson.list.forEach((value) => {
@@ -88,6 +84,15 @@ function parseData(weatherDataJson, tempUnit) { //grabbing the bits of data we a
     return forecastProps
 }
 
+function getUserData() {
+    return $.getJSON(window.location.origin + "/getuserdata")
+}
+
+function getCityFromData(json) {
+    let retStr = json.city.name + ", " + countryList.name(json.city.country);
+    return retStr;
+}
+
 
 class WeekTable extends React.Component {
     constructor(props) {
@@ -115,30 +120,38 @@ class WeekTable extends React.Component {
     render() {
         // console.log(this.props.weatherData)
         let tabArray = this.tabulate()
-        let rowHeads = [<th>T<sub>max</sub></th>, <th>T<sub>min</sub></th>, <th>T<sub>maxfeel</sub></th>, <th>T<sub>minfeel</sub></th>, <th>RH<sub>max</sub> (%)</th>, <th>RH<sub>min</sub> (%)</th>]
+        let rowHeads = [
+        <th>T<sub>max</sub></th>, 
+        <th>T<sub>min</sub></th>, 
+        <th>T<sub>maxfeel</sub></th>, 
+        <th>T<sub>minfeel</sub></th>, 
+        <th>RH<sub>max</sub> (%)</th>, 
+        <th>RH<sub>min</sub> (%)</th>]
         return (
-            <table className="table table-sm table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th scope='scope'>Property</th>
-                        {tabArray[0].map((day) => {
-                            return <th scope='col'>{day}</th>
-                        })}
-                    </tr>
-                </thead>
-                <tbody>
-                    {tabArray[1].map((dayValues, ind) => {
-                        return (
-                        <tr scope='row'>
-                            {rowHeads[ind]}
-                            {dayValues.map((value) => {
-                                return <td>{value}</td>
+            <div className="week-table table-responsive">
+                <table className="table table-sm table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th scope='scope'>Property</th>
+                            {tabArray[0].map((day) => {
+                                return <th key={day} scope='col'>{day}</th>
                             })}
                         </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {tabArray[1].map((dayValues, ind) => {
+                            return (
+                            <tr key={dayValues} scope='row'>
+                                {rowHeads[ind]}
+                                {dayValues.map((value, index) => {
+                                    return <td key={value.toString() + index}>{value}</td>
+                                })}
+                            </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
         )
     }
 }
@@ -149,7 +162,7 @@ class WeatherBox extends React.Component {
         this.state = {
             searchTerm: this.props.city,
             currentCity: '',
-            units: 'C',
+            cityString: "",
             weatherData: {}
         }
         this.weatherUpdate = this.weatherUpdate.bind(this);
@@ -158,15 +171,17 @@ class WeatherBox extends React.Component {
         this.removeSelf = this.removeSelf.bind(this)
     }
 
-    weatherUpdate(cityName, units) {
+    weatherUpdate(cityName) {
         let APIData
-        getData(cityName).then((json) => {
+        getWeatherData(cityName).then((json) => {
             // console.log(json)
-            APIData = parseData(json, this.state.units)
+            APIData = parseWeatherData(json, this.props.units)
+            let cityString = getCityFromData(json)
             // console.log(APIData)
             this.setState(state => ({
                 weatherData: APIData,
-                currentCity: this.state.searchTerm,
+                currentCity: state.searchTerm,
+                cityString: cityString,
                 searchTerm: ""
             }))
             // console.log(this.state.weatherData)
@@ -182,11 +197,12 @@ class WeatherBox extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         // console.log(event)
-        this.weatherUpdate(this.state.searchTerm, this.state.units)
+        // this.weatherUpdate(this.state.searchTerm)
+        this.props.changeCity(this.state.searchTerm, this.props.index)
     }
 
     removeSelf() {
-        this.props.deleteCity(this.state.currentCity)
+        this.props.deleteCity(this.props.index)
     }
 
     componentDidMount() {
@@ -247,29 +263,44 @@ class WeatherBox extends React.Component {
                 ]
             };
             return (
-                <div className='container'>
+                <div className='card'>
+                    <div>
+                        <h2 className='card-title'>Weather this week in {this.state.cityString}</h2>
+                        <p className='card-subtitle mb-2 text-muted'>(Search term "{this.state.currentCity}")</p>
+                    </div>
+                    
+                    <div className='canvas-container'>
+                        <Line 
+                        data={data}
+                        // height={}
+                        options={{ maintainAspectRatio: false }} />
+                    </div>
+                    
+                    <WeekTable 
+                    key={"weekTable"+ this.props.city}
+                    weatherData={this.state.weatherData}/>
+                    <div>
+                        <form onSubmit={this.handleSubmit}>
+                            <input type='text' value={this.state.searchTerm} onChange={this.searchTermUpdate}  placeholder='city name (eg "Sydney")'></input>
+                            <input type='submit' value='Submit'></input>
+                        </form>
+                        <button onClick={this.removeSelf}>Remove City</button>
+                    </div>
+                    
+                </div>
+            )
+        } else {
+            return (
+                <div className='card'>
+                    <div>No data yet...</div>
                     <form onSubmit={this.handleSubmit}>
                         <input type='text' value={this.state.searchTerm} onChange={this.searchTermUpdate}  placeholder='city name (eg "Sydney")'></input>
                         <input type='submit' value='Submit'></input>
                     </form>
                     <button onClick={this.removeSelf}>Remove City</button>
-                    <h2>Weather for search: "{this.state.currentCity}"</h2>
-                    <Line data={data} />
-                    <WeekTable weatherData={this.state.weatherData}/>
-                </div>
-            )
-        } else {
-            return (
-                <div className='container'>
-                    <form onSubmit={this.handleSubmit}>
-                        <input type='text' value={this.state.searchTerm} onChange={this.searchTermUpdate}  placeholder='city name (eg "Sydney")'></input>
-                        <input type='submit' value='Submit'></input>
-                    </form>
-                    <div>No data yet...</div>
                 </div>
             )
         }
-        
     }
 }
 
@@ -278,40 +309,92 @@ class App extends React.Component {
         super(props)
         this.state = {
             units: 'C',
-            cities: ['Sydney', 'd', 'hong kong', 'tel aviv']
+            cities: []
         }
         this.addCity = this.addCity.bind(this)
         this.deleteCity = this.deleteCity.bind(this)
+        this.changeCity = this.changeCity.bind(this)
+        this.changeUnit = this.changeUnit.bind(this)
+        this.logout = this.logout.bind(this)
     }
 
     addCity() {
         this.setState(state => ({
             cities: [...state.cities, '']
         }))
+
     }
 
-    deleteCity(city) {
-        console.log(city)
-        let newArr = this.state.cities.slice(0, this.state.cities.indexOf(city)).concat(this.state.cities.slice(this.state.cities.indexOf(city)+1))
-        console.log(newArr)
+    logout() {
+        $.get('/logout')
+    }
+
+    deleteCity(index) {
+        // console.log(index)
+        let newArr = this.state.cities.slice(0, index).concat(this.state.cities.slice(index+1))
+        // console.log("the new array is " + newArr)
         this.setState({
             cities: newArr
         })
-        
+    }
+
+    changeCity(newCity, index) {
+        console.log(this.state.cities.slice(0,index))
+        this.setState(state => ({
+            cities: state.cities.slice(0,index).concat(newCity).concat(state.cities.slice(index+1))
+        }))
+    }
+
+    changeUnit(event) {
+        console.log(event.target.value)
+        this.setState({
+            units: event.target.value
+        })
+    }
+    
+    componentDidMount() {
+        getUserData().then(json => {
+            this.setState({
+                units: json.units,
+                cities: json.cities
+            })
+        })
+    }
+
+    componentDidUpdate() {
+        $.post(window.location.origin + "/updateuserinfo", {
+            units: this.state.units,
+            cities: this.state.cities
+        })
     }
 
     render() {
         return (
-            <div>
-                {this.state.cities.map(city => {
-                    return <WeatherBox 
-                    city={city}
-                    deleteCity={this.deleteCity}
-                     />
-                })}
-                <button onClick={this.addCity}>Add Another City</button>
+            <div className='pagewrapper'>
+                <div className='sidenav'>
+                    <form className='sidenav-units'>
+                        <label htmlFor='celcius'><input id='celcius' type="radio" name='unit' value='C' checked={this.state.units==='C'} onChange={this.changeUnit} /> Celcius</label>
+                        <label htmlFor='farenheit'><input id='farenheit' type="radio" name='unit' value='F' checked={this.state.units==='F'} onChange={this.changeUnit} /> Farenheit</label>
+                        <label htmlFor='kelvin'><input id='kelvin' type="radio" name='unit' value='K' checked={this.state.units==='K'} onChange={this.changeUnit} /> Kelvin</label>
+                    </form>
+                    <button className='sidenav-button' onClick={this.addCity}>Add Another City</button>
+                    <button onClick={this.logout}>Logout</button>
+                </div>
+                <div className='container-fluid'>
+                    {this.state.cities.map((city, index) => {
+                        return <WeatherBox 
+                        key={(city==='')?shortid.generate():city+index+this.state.units}
+                        index = {index}
+                        city={city}
+                        units={this.state.units}
+                        deleteCity={this.deleteCity}
+                        changeCity={this.changeCity}
+                        />
+                    })}
+                    
+                </div>
+                
             </div>
-            
         )
     }
 }

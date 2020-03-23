@@ -1,30 +1,44 @@
-// server.js
+const express       = require('express');
+const bodyParser    = require('body-parser');
+const session       = require('express-session');
+const passport      = require('passport');
+const mongo         = require('mongodb').MongoClient;
+require('dotenv').config() //so we can make use of .env files
 
-// init project
-var express = require('express');
-var app = express();
-var request = require('request')
-require('dotenv').config()
+const app           = express();
+const routes        = require('./routes.js');
+const auth          = require('./auth.js');
 
 
-// http://expressjs.com/en/starter/static-files.html
+
 app.use(express.static('public'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function(request, response) {
-  response.sendFile(__dirname + '/public/index.html');
-});
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: true,
+  saveUninitialized: true,
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.get('/getweather', function(req, res) {
-    request('https://api.openweathermap.org/data/2.5/forecast?lat=-33.9240479&lon=151.1880122&appid=2660e938622fb954aa1131b571b41e53', function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      // console.log(response)
-      // console.log(JSON.parse(body))
-      res.json(JSON.parse(body))
-    }
-  })
-});
-// listen for requests :)
-var listener = app.listen(process.env.PORT||3000, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
-});
+mongo.connect(process.env.DATABASE,
+  {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  },
+  (err, client) => {
+  if(err) {
+    console.log('Database error: ' + err);
+  } else {
+    // console.log('database connected')
+    var db = client.db()
+    routes(app, db);
+    auth(app, db);
+
+    var listener = app.listen(process.env.PORT||3000, function () {
+      console.log('Your app is listening on port ' + listener.address().port);
+    });
+  } 
+})
