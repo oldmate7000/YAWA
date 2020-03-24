@@ -32,7 +32,7 @@ mongo.connect(process.env.DATABASE,
   if(err) {
     console.log('Database error: ' + err);
   } else {
-    // console.log('database connected')
+    console.log('database connected')
     var db = client.db()
     routes(app, db);
     auth(app, db);
