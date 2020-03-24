@@ -10,7 +10,7 @@ module.exports = function (app, db) {
   // })
 
   function ensureAuthenticated(req, res, next) {
-    console.log("checking authentication");
+    // console.log("checking authentication");
     if (req.isAuthenticated()) {
       return next();
     }
@@ -56,13 +56,13 @@ module.exports = function (app, db) {
   })
 
   app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), function (req, res) {
-    console.log("User " + req.username + " logged in.")
+    // console.log("User " + req.username + " logged in.")
     res.redirect('/weather')
   })
 
   app.route('/logout')
     .get((req, res) => {
-      console.log('logout request recieved')
+      // console.log('logout request recieved')
       req.session.destroy()
       req.logout();
       res.redirect('/');
