@@ -340,14 +340,14 @@ class App extends React.Component {
     }
 
     changeCity(newCity, index) {
-        console.log(this.state.cities.slice(0,index))
+        // console.log(this.state.cities.slice(0,index))
         this.setState(state => ({
             cities: state.cities.slice(0,index).concat(newCity).concat(state.cities.slice(index+1))
         }))
     }
 
     changeUnit(event) {
-        console.log(event.target.value)
+        // console.log(event.target.value)
         this.setState({
             units: event.target.value
         })

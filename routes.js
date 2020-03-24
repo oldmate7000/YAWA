@@ -18,7 +18,7 @@ module.exports = function (app, db) {
   };
 
   app.get('/weather', ensureAuthenticated, (req, res) => {
-    console.log('sending weather.html')
+    // console.log('sending weather.html')
     res.sendFile(__dirname + '/public/weather.html');
   })
 
@@ -33,7 +33,7 @@ module.exports = function (app, db) {
   });
 
   app.get('/getuserdata', ensureAuthenticated, function(req, res, next) {
-    console.log(req.user)
+    // console.log(req.user)
     db.collection('users').findOne({_id: req.user._id}, function(err, user) {
       if (err) {
         next(err)
@@ -47,7 +47,7 @@ module.exports = function (app, db) {
   })
 
   app.post('/updateuserinfo', ensureAuthenticated, function(req, res, next) {
-    console.log(req.body)
+    // console.log(req.body)
     db.collection('users').updateOne(
       {_id: req.user._id},
       {$set: req.body}
@@ -56,7 +56,7 @@ module.exports = function (app, db) {
   })
 
   app.post('/login', passport.authenticate('local', { failureRedirect: '/' }), function (req, res) {
-    console.log("User " + req.username + " attempted to log in.")
+    console.log("User " + req.username + " logged in.")
     res.redirect('/weather')
   })
 
