@@ -4,7 +4,7 @@
   "description": "A Weather App, built on MERN stack, using OpenWeatherMap's API",
   "main": "server.js",
   "scripts": {
-    "build": "webpack --config webpack.prod.js",
+    "build": "webpack --config webpack.prod.js"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
