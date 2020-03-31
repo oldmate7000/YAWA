@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Y.A.W.A. (Yet Another Weather App)</title>
+</head>
+<body>
+    <header>
+        <h1 class='display-1'>Y.A.W.A.</h1>
+        <p><em>Yet Another Weather App...</em></p>
+    </header>
+    <main class='page-wrapper'>
+        <div class='custcard'>
+            <h2 class='card-title'>Log In:</h2>
+            <form action="/login" method='post'>
+                <label for='name'>Username: </label>
+                <input class="form-control" type='text' name='username'>
+                <label for='password'>Password: </label>
+                <input class="form-control" type='password' name='password'>
+                <input class='btn btn-primary' type='submit' value='Submit!'>
+            </form>
+        </div>
+        <div class='custcard'>
+            <form action="/register" method='post'>
+                <h2 class="card-title">Register New User:</h2>
+                <label for='name'>Username: </label>
+                <input class="form-control" type='text' name='username'>
+                <label for='password'>Password: </label>
+                <input class="form-control" type='password' name='password'>
+                <input class='btn btn-primary' type='submit' value='Submit!'>
+            </form>
+        </div>
+    </main>
+    <footer class='container-fluid'>
+        <h2>About the log in...</h2>
+        <p>Registration takes any unused username and there are no restricitons on password input<br>
+        Alternatively you may login using 'guest' as username and password (without the quotation marks) to see what the world has left you to view<br>
+        Bear in mind that this is a demo page for a <b><em>jr</em></b> developer - so while I store passwords as hashes (thanks <a href="https://www.npmjs.com/package/bcrypt" target="_blank">bcrypt</a>), I'm not a cyber-security expert by any means. Please don't repeat any password you'd use in the wild here.
+        </p>
+        <h4>A little about this page...</h4>
+        <p>this page has been created as a demo page by me, <a href="https://oldmate7000.github.io/" target="_blank">Bryce Leath</a> to show use of MERN in full-stack devolopment and AJAX API manipulation</p>
+    </footer>
+</body>
+</html>

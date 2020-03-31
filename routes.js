@@ -17,6 +17,10 @@ module.exports = function (app, db) {
     res.redirect('/');
   };
 
+  app.get('/', (req, res) => {
+    res.sendFile(__dirname + '/public/login.html');
+  })
+
   app.get('/weather', ensureAuthenticated, (req, res) => {
     // console.log('sending weather.html')
     res.sendFile(__dirname + '/public/weather.html');

@@ -7,6 +7,10 @@
     justify-content: space-between;
 }
 
+.remove-button {
+    width: 100%;
+}
+
 .container-fluid {
     width: auto;
     margin-left: 200px;
@@ -27,6 +31,7 @@
 
 .sidenav button {
     width: 90%;
+    margin: 5px;
 }
 
 .sidenav-units {

@@ -1,13 +1,11 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-// const $ = require('jquery')
 const shortid = require('shortid');
 const countryList = require('iso-3166-country-list');
 
 import $ from 'jquery'
 import {Line} from 'react-chartjs-2'
-import 'bootstrap'
-import './style.css';
+import './weather.css';
 
 
 function getWeatherData(cityName) { //function purely to fetch the data from the server and pack it into 'weatherDataJson'
@@ -280,13 +278,15 @@ class WeatherBox extends React.Component {
                     key={"weekTable"+ this.props.city}
                     weatherData={this.state.weatherData}/>
                     <div>
-                        <form onSubmit={this.handleSubmit}>
-                            <input type='text' value={this.state.searchTerm} onChange={this.searchTermUpdate}  placeholder='city name (eg "Sydney")'></input>
-                            <input type='submit' value='Submit'></input>
+                        <form className="input-group mb-3" onSubmit={this.handleSubmit}>
+                            <input className="form-control" type='text' value={this.state.searchTerm} onChange={this.searchTermUpdate}  placeholder='city name (eg "Sydney")'></input>
+                            <div className="input-group-append">
+                                <input className="btn btn-primary" type='submit' value='Submit'></input>
+                            </div>
                         </form>
-                        <button onClick={this.removeSelf}>Remove City</button>
+                        <button className="remove-button btn btn-danger" onClick={this.removeSelf}>Remove City</button>
                     </div>
-                    
+
                 </div>
             )
         } else {
@@ -378,8 +378,8 @@ class App extends React.Component {
                         <label htmlFor='farenheit'><input id='farenheit' type="radio" name='unit' value='F' checked={this.state.units==='F'} onChange={this.changeUnit} /> Farenheit</label>
                         <label htmlFor='kelvin'><input id='kelvin' type="radio" name='unit' value='K' checked={this.state.units==='K'} onChange={this.changeUnit} /> Kelvin</label>
                     </form>
-                    <button className='sidenav-button' onClick={this.addCity}>Add Another City</button>
-                    <button className='sidenav-button' onClick={this.logout}>Logout</button>
+                    <button className='btn btn-primary sidenav-button' onClick={this.addCity}>Add Another City</button>
+                    <button className='btn btn-danger sidenav-button' onClick={this.logout}>Logout</button>
                 </div>
                 <div className='container-fluid'>
                     {this.state.cities.map((city, index) => {
@@ -392,7 +392,6 @@ class App extends React.Component {
                         changeCity={this.changeCity}
                         />
                     })}
-                    
                 </div>
                 
             </div>

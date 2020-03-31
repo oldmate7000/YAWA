@@ -1,21 +1,29 @@
 const path = require('path');
 var HtmlWebpackPlugin = require("html-webpack-plugin")
+const {CleanWebpackPlugin} = require("clean-webpack-plugin");
+
 
 module.exports = {
   context: path.join(__dirname, './'),
-  entry: './app/weather.js',
+  entry: {
+    login: './src/login.js',
+    weather: './src/weather.js'
+  },
   resolve: {
     extensions: ['.js', '.jsx', '.css'],
   },
   plugins: [
     new HtmlWebpackPlugin({
-    template: "./app/weather.html",
+    template: "./src/weather.html",
     filename: 'weather.html',
+    chunks: ['weather']
   }),
   new HtmlWebpackPlugin({
-    template: "./app/login.html",
-    inject: false,
-  })
+    template: "./src/login.html",
+    filename: "login.html",
+    chunks: ['login']
+  }),
+  new CleanWebpackPlugin()
   ],
   module: {
     rules: [
@@ -26,13 +34,13 @@ module.exports = {
           presets: ['react']
         },
         exclude: /node_modules/,
-        include: path.join(__dirname, 'app'),
+        include: path.join(__dirname, 'src'),
       },
       {
         test: /\.css$/,
         loader: ['style-loader', 'css-loader'],
         exclude: /node_modules/,
-        include: path.join(__dirname, 'app'),
+        include: path.join(__dirname, 'src'),
       }
     ]
   },
