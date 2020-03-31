@@ -1,5 +1,6 @@
 const path = require('path');
 var HtmlWebpackPlugin = require("html-webpack-plugin")
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require("clean-webpack-plugin");
 
 
@@ -13,7 +14,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.css'],
   },
   plugins: [
-    new HtmlWebpackPlugin({
+  new HtmlWebpackPlugin({
     template: "./src/weather.html",
     filename: 'weather.html',
     chunks: ['weather']
@@ -38,7 +39,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: ['style-loader', 'css-loader'],
+        loader: [MiniCssExtractPlugin.loader, 'css-loader'],
         exclude: /node_modules/,
         include: path.join(__dirname, 'src'),
       }
