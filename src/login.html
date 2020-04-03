@@ -23,7 +23,7 @@
         </div>
         <div class='custcard'>
             <form action="/register" method='post'>
-                <h2 class="card-title">Register New User:</h2>
+                <h2 class="card-title">Register:</h2>
                 <label for='name'>Username: </label>
                 <input class="form-control" type='text' name='username'>
                 <label for='password'>Password: </label>
@@ -32,14 +32,23 @@
             </form>
         </div>
     </main>
-    <footer class='container-fluid'>
-        <h2>About the log in...</h2>
-        <p>Registration takes any unused username and there are no restricitons on password input<br>
-        Alternatively you may login using 'guest' as username and password (without the quotation marks) to see what the world has left you to view<br>
-        Bear in mind that this is a demo page for a <b><em>jr</em></b> developer - so while I store passwords as hashes (thanks <a href="https://www.npmjs.com/package/bcrypt" target="_blank">bcrypt</a>), I'm not a cyber-security expert by any means. Please don't repeat any password you'd use in the wild here.
+    <footer class='container'>
+        <h2>A little About the log in...</h2>
+        <p>Registration takes any unused username and there are no restricitons on password input.<br>
+        Alternatively you may login using 'guest' as username and password (without the quotation marks) to see what the world has left you to view.
         </p>
-        <h4>A little about this page...</h4>
-        <p>this page has been created as a demo page by me, <a href="https://oldmate7000.github.io/" target="_blank">Bryce Leath</a> to show use of MERN in full-stack devolopment and AJAX API manipulation</p>
+        <h2>A little about this page...</h2>
+        <p>This page has been created as a demo page to show use of MERN in full-stack devolopment. 
+        It's a simple weather app which takes its data from the free-tier 
+         <a href="https://openweathermap.org/">OpenWeatherMap</a> 5-day forecast API.
+         Why a weather app? Because it creates a chance to demonstrate use of authentication, state management and scripting, 
+         responsive styling, database use, 3rd party API use, back-end setup and more all in one spot.
+         If you'd like to see what went into it you may do so at the 
+         <a href='https://github.com/oldmate7000/YAWA'>project's repository.</a>
+        </p>
+        <h2>A little about me</h2>
+        <p>If you'd like to see more of my work, or are considering bolstering your team and wish to contact me, 
+            see <a href='https://oldmate7000.github.io/'>my portfolio</a> for more.</p>
     </footer>
 </body>
 </html>
