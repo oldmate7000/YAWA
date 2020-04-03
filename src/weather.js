@@ -286,7 +286,6 @@ class WeatherBox extends React.Component {
                         </form>
                         <button className="remove-button btn btn-danger" onClick={this.removeSelf}>Remove City</button>
                     </div>
-
                 </div>
             )
         } else {
@@ -297,7 +296,7 @@ class WeatherBox extends React.Component {
                         <input type='text' value={this.state.searchTerm} onChange={this.searchTermUpdate}  placeholder='city name (eg "Sydney")'></input>
                         <input type='submit' value='Submit'></input>
                     </form>
-                    <button onClick={this.removeSelf}>Remove City</button>
+                    <button className="remove-button btn btn-danger" onClick={this.removeSelf}>Remove City</button>
                 </div>
             )
         }
@@ -322,12 +321,15 @@ class App extends React.Component {
         this.setState(state => ({
             cities: [...state.cities, '']
         }))
-
     }
 
     logout() {
-        $.get('/logout')
-        window.location=window.location.origin;
+        $.post('/logout').then((res)=>{
+            if(res==='OK'){
+                localStorage.clear();
+                window.location = '/';
+            }
+        });
     }
 
     deleteCity(index) {

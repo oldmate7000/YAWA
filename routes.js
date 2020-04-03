@@ -10,10 +10,13 @@ module.exports = function (app, db) {
   // })
 
   function ensureAuthenticated(req, res, next) {
-    // console.log("checking authentication");
+    console.log("checking authentication");
+    console.log(req.session)
     if (req.isAuthenticated()) {
+      console.log('is authenticated')
       return next();
     }
+    console.log('not authenticated')
     res.redirect('/');
   };
 
@@ -23,6 +26,7 @@ module.exports = function (app, db) {
 
   app.get('/weather', ensureAuthenticated, (req, res) => {
     // console.log('sending weather.html')
+
     res.sendFile(__dirname + '/public/weather.html');
   })
 
@@ -64,12 +68,16 @@ module.exports = function (app, db) {
     res.redirect('/weather')
   })
 
-  app.route('/logout')
-    .get((req, res) => {
-      // console.log('logout request recieved')
-      req.session.destroy()
-      req.logout();
-      res.redirect('/');
+  app.post('/logout', (req, res) => {
+      console.log('logout request recieved')
+      
+      req.session.destroy((err) => {
+        if(err) return next(err)
+      
+        req.logout()
+      
+        res.sendStatus(200)
+      })
     });
 
   app.route('/register')

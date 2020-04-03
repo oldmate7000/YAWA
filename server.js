@@ -17,8 +17,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(session({
   secret: process.env.SESSION_SECRET,
-  resave: true,
+  resave: false,
   saveUninitialized: true,
+  unset: 'destroy'
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -34,11 +35,12 @@ mongo.connect(process.env.DATABASE,
   } else {
     console.log('database connected')
     var db = client.db()
+    
     routes(app, db);
     auth(app, db);
 
     var listener = app.listen(process.env.PORT||3000, function () {
       console.log('Your app is listening on port ' + listener.address().port);
     });
-  } 
+  }
 })
