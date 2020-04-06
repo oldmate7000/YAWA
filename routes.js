@@ -69,7 +69,7 @@ module.exports = function (app, db) {
   })
 
   app.post('/logout', (req, res) => {
-      console.log('logout request recieved')
+      // console.log('logout request recieved')
       
       req.session.destroy((err) => {
         if(err) return next(err)

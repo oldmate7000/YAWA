@@ -7,11 +7,9 @@ import $ from 'jquery'
 import {Line} from 'react-chartjs-2'
 import './weather.css';
 
-
 function getWeatherData(cityName) { //function purely to fetch the data from the server and pack it into 'weatherDataJson'
     return $.getJSON(window.location.origin + "/getweather?city="+cityName)
 }
-
 
 function parseWeatherData(weatherDataJson, tempUnit) { //grabbing the bits of data we actually want from the api call.
     let forecastProps = {}
@@ -292,9 +290,11 @@ class WeatherBox extends React.Component {
             return (
                 <div className='card'>
                     <div>No data yet...</div>
-                    <form onSubmit={this.handleSubmit}>
-                        <input type='text' value={this.state.searchTerm} onChange={this.searchTermUpdate}  placeholder='city name (eg "Sydney")'></input>
-                        <input type='submit' value='Submit'></input>
+                    <form className="input-group mb-3" onSubmit={this.handleSubmit}>
+                        <input className="form-control" type='text' value={this.state.searchTerm} onChange={this.searchTermUpdate}  placeholder='city name (eg "Sydney")'></input>
+                        <div className="input-group-append">
+                            <input className="btn btn-primary" type='submit' value='Submit'></input>
+                        </div>
                     </form>
                     <button className="remove-button btn btn-danger" onClick={this.removeSelf}>Remove City</button>
                 </div>

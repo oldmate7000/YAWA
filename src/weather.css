@@ -1,4 +1,7 @@
-@import "~bootstrap/dist/css/bootstrap.css";
+.container-fluid {
+    width: auto;
+    margin-left: 200px;
+}
 
 .card {
     margin: 2.5vh;
@@ -11,10 +14,7 @@
     width: 100%;
 }
 
-.container-fluid {
-    width: auto;
-    margin-left: 200px;
-}
+
 
 .canvas-container {
     height: 40vh
