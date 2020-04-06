@@ -10,13 +10,13 @@ module.exports = function (app, db) {
   // })
 
   function ensureAuthenticated(req, res, next) {
-    console.log("checking authentication");
-    console.log(req.session)
+    // console.log("checking authentication");
+    // console.log(req.session)
     if (req.isAuthenticated()) {
-      console.log('is authenticated')
+      // console.log('is authenticated')
       return next();
     }
-    console.log('not authenticated')
+    // console.log('not authenticated')
     res.redirect('/');
   };
 
